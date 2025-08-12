@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tekton Tasks - Integration Example</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f1f5f9;
+    }
+    
+    .integration-header {
+      background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+      color: white;
+      padding: 24px;
+      text-align: center;
+    }
+    
+    .integration-title {
+      margin: 0 0 8px 0;
+      font-size: 28px;
+      font-weight: 600;
+    }
+    
+    .integration-subtitle {
+      margin: 0;
+      opacity: 0.9;
+      font-size: 16px;
+    }
+    
+    .integration-info {
+      background: white;
+      padding: 24px;
+      margin: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    
+    .info-section {
+      margin-bottom: 24px;
+    }
+    
+    .info-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #1e293b;
+    }
+    
+    .info-content {
+      color: #64748b;
+      line-height: 1.6;
+    }
+    
+    .code-block {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 16px;
+      border-radius: 8px;
+      font-family: 'Monaco', 'Consolas', monospace;
+      font-size: 14px;
+      overflow-x: auto;
+      margin: 12px 0;
+    }
+    
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+      background: #22c55e;
+      color: white;
+    }
+    
+    tekton-tasks {
+      display: block;
+      margin: 24px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="integration-header">
+    <h1 class="integration-title">🔧 Tekton Tasks Web Component</h1>
+    <p class="integration-subtitle">Production-ready integration with Facets Control Plane</p>
+  </div>
+
+  <div class="integration-info">
+    <div class="info-section">
+      <h2 class="info-title">🚀 Component Status</h2>
+      <div class="info-content">
+        <span class="status-badge">✅ Ready for Production</span>
+        <p>This component is fully functional and ready to be integrated into your Facets environment.</p>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2 class="info-title">📋 Integration Steps</h2>
+      <div class="info-content">
+        <p><strong>1. Register in Facets:</strong></p>
+        <div class="code-block">
+Name: tekton-tasks
+Type: local
+Remote URL: https://username.github.io/tekton-tasks-web-component/tekton-tasks.js
+Icon URL: https://username.github.io/tekton-tasks-web-component/tekton-icon.svg
+Tooltip: Tekton Tasks Dashboard
+        </div>
+        
+        <p><strong>2. Use in HTML:</strong></p>
+        <div class="code-block">
+&lt;tekton-tasks&gt;&lt;/tekton-tasks&gt;
+&lt;script type="module" src="./tekton-tasks.js"&gt;&lt;/script&gt;
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2 class="info-title">⚙️ Configuration</h2>
+      <div class="info-content">
+        <p>Currently configured for:</p>
+        <ul>
+          <li><strong>Cluster:</strong> cluster1</li>
+          <li><strong>Resource:</strong> service/tekton</li>
+          <li><strong>Auto-refresh:</strong> Every 10 seconds</li>
+        </ul>
+        <p>Edit <code>src/utils/constants.js</code> to customize these settings.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- The actual Tekton Tasks component -->
+  <tekton-tasks></tekton-tasks>
+
+  <script type="module" src="./tekton-tasks.js"></script>
+</body>
+</html>
