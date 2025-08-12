@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tekton Tasks - Deployment Status</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: white;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    
+    .status-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 40px;
+      margin: 32px 0;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    
+    .subtitle {
+      font-size: 18px;
+      opacity: 0.9;
+      margin-bottom: 32px;
+    }
+    
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #22c55e;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 24px;
+      font-weight: 600;
+      font-size: 16px;
+      margin: 16px 0;
+    }
+    
+    .deployment-info {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+      text-align: left;
+    }
+    
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .info-row:last-child {
+      border-bottom: none;
+    }
+    
+    .info-label {
+      font-weight: 500;
+      opacity: 0.8;
+    }
+    
+    .info-value {
+      font-family: 'Monaco', 'Consolas', monospace;
+      font-size: 14px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+    
+    .btn {
+      display: inline-block;
+      background: white;
+      color: #667eea;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      margin: 8px;
+      transition: transform 0.2s ease;
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+    
+    .component-preview {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 16px;
+      margin: 24px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="status-card">
+      <h1 class="title">🚀 Tekton Tasks Web Component</h1>
+      <p class="subtitle">Deployment Status & Integration Guide</p>
+      
+      <div class="status-indicator">
+        ✅ Successfully Deployed
+      </div>
+      
+      <div class="deployment-info">
+        <div class="info-row">
+          <span class="info-label">Component URL:</span>
+          <span class="info-value" id="component-url">Loading...</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Icon URL:</span>
+          <span class="info-value" id="icon-url">Loading...</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Status:</span>
+          <span class="info-value">✅ Ready for Facets Integration</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Last Updated:</span>
+          <span class="info-value" id="last-updated">Loading...</span>
+        </div>
+      </div>
+      
+      <div>
+        <a href="./index.html" class="btn">📊 View Demo</a>
+        <a href="./example.html" class="btn">🔧 Integration Example</a>
+        <a href="https://github.com/anujhydrabadi/tekton-tasks-web-component" class="btn">📦 Source Code</a>
+      </div>
+    </div>
+
+    <div class="status-card">
+      <h2>🔧 Facets Integration</h2>
+      <p>Copy these values into your Facets Web Components configuration:</p>
+      
+      <div class="deployment-info">
+        <div class="info-row">
+          <span class="info-label">Name:</span>
+          <span class="info-value">tekton-tasks</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Type:</span>
+          <span class="info-value">local</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Remote URL:</span>
+          <span class="info-value" id="facets-url">Loading...</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Icon URL:</span>
+          <span class="info-value" id="facets-icon">Loading...</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Tooltip:</span>
+          <span class="info-value">Tekton Tasks Dashboard</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="component-preview">
+      <h3>🎯 Component Preview</h3>
+      <p>The component provides a comprehensive Tekton tasks management interface with:</p>
+      <ul style="text-align: left; max-width: 500px; margin: 0 auto;">
+        <li>📊 Task dashboard with real-time status</li>
+        <li>🚀 Dynamic task triggering with parameter forms</li>
+        <li>📈 Complete execution history and monitoring</li>
+        <li>📋 Step-by-step logs and debugging</li>
+        <li>🔄 Auto-refresh every 10 seconds</li>
+        <li>📱 Fully responsive design</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    // Auto-populate URLs based on current domain
+    const baseUrl = window.location.origin + window.location.pathname.replace('/status.html', '');
+    
+    document.getElementById('component-url').textContent = baseUrl + '/tekton-tasks.js';
+    document.getElementById('icon-url').textContent = baseUrl + '/tekton-icon.svg';
+    document.getElementById('facets-url').textContent = baseUrl + '/tekton-tasks.js';
+    document.getElementById('facets-icon').textContent = baseUrl + '/tekton-icon.svg';
+    document.getElementById('last-updated').textContent = new Date().toLocaleString();
+  </script>
+</body>
+</html>
