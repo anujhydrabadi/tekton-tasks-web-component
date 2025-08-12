@@ -16,8 +16,7 @@ class TektonTasksComponent extends HTMLElement {
       loading: false,
       error: null,
       showTriggerModal: false,
-      showRunDetails: null,
-      refreshInterval: null
+      showRunDetails: null
     };
     
     // Bind methods
@@ -30,24 +29,10 @@ class TektonTasksComponent extends HTMLElement {
   connectedCallback() {
     this.render();
     this.loadTasks();
-    this.startAutoRefresh();
   }
 
   disconnectedCallback() {
-    this.stopAutoRefresh();
-  }
-
-  startAutoRefresh() {
-    this.state.refreshInterval = setInterval(() => {
-      this.refreshData();
-    }, CONFIG.REFRESH_INTERVAL);
-  }
-
-  stopAutoRefresh() {
-    if (this.state.refreshInterval) {
-      clearInterval(this.state.refreshInterval);
-      this.state.refreshInterval = null;
-    }
+    // Cleanup if needed
   }
 
   async loadTasks() {
@@ -508,7 +493,7 @@ class TektonTasksComponent extends HTMLElement {
     // Refresh button
     const refreshBtn = shadow.getElementById('refresh-btn');
     if (refreshBtn) {
-      refreshBtn.addEventListener('click', this.loadTasks);
+      refreshBtn.addEventListener('click', this.refreshData);
     }
 
     // Trigger task buttons

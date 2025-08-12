@@ -51,6 +51,9 @@ class ApiService {
   async triggerTask(taskName, params = {}) {
     return this.makeRequest(ENDPOINTS.triggerTask(taskName), {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify({ params })
     });
   }
