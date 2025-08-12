@@ -1,0 +1,28 @@
+{
+  "name": "tekton-tasks-web-component",
+  "version": "1.0.0",
+  "description": "A web component for viewing and triggering Tekton tasks in Facets Control Plane",
+  "main": "src/tekton-tasks.js",
+  "scripts": {
+    "dev": "npm run build && python3 -m http.server 8080 --directory public",
+    "build": "npm run copy-files && npm run bundle",
+    "copy-files": "cp src/tekton-tasks.js public/ && cp src/styles/main.css public/",
+    "bundle": "echo 'Build complete - files copied to public/'",
+    "preview": "python3 -m http.server 8080 --directory public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anujhydrabadi/tekton-tasks-web-component.git"
+  },
+  "keywords": [
+    "tekton",
+    "kubernetes",
+    "web-component",
+    "facets",
+    "control-plane"
+  ],
+  "author": "Anuj Hydrabadi",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {}
+}

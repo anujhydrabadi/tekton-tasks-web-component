@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tekton Tasks Web Component</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f8fafc;
+    }
+    
+    .demo-header {
+      text-align: center;
+      margin-bottom: 32px;
+      padding: 24px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .demo-title {
+      color: #1e293b;
+      margin-bottom: 8px;
+    }
+    
+    .demo-subtitle {
+      color: #64748b;
+      font-size: 16px;
+    }
+    
+    tekton-tasks {
+      display: block;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-header">
+    <h1 class="demo-title">🔧 Tekton Tasks Web Component</h1>
+    <p class="demo-subtitle">
+      A comprehensive dashboard for viewing and triggering Tekton tasks<br>
+      <strong>Cluster:</strong> cluster1 | <strong>Resource:</strong> service/tekton
+    </p>
+  </div>
+
+  <!-- The Tekton Tasks Web Component -->
+  <tekton-tasks></tekton-tasks>
+
+  <!-- Load the component script -->
+  <script type="module" src="./tekton-tasks.js"></script>
+</body>
+</html>
