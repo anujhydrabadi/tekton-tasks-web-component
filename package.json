@@ -2,13 +2,14 @@
   "name": "tekton-tasks-web-component",
   "version": "1.0.0",
   "description": "A web component for viewing and triggering Tekton tasks in Facets Control Plane",
-  "main": "src/tekton-tasks.js",
+  "main": "dist/tekton-tasks.umd.js",
   "scripts": {
-    "dev": "npm run build && python3 -m http.server 8080 --directory public",
-    "build": "npm run copy-files && npm run bundle",
-    "copy-files": "cp src/tekton-tasks.js public/ && cp src/styles/main.css public/",
-    "bundle": "echo 'Build complete - files copied to public/'",
-    "preview": "python3 -m http.server 8080 --directory public"
+    "dev": "webpack serve --mode development",
+    "build": "webpack --mode production && npm run copy-assets",
+    "build:dev": "webpack --mode development && npm run copy-assets",
+    "copy-assets": "cp public/tekton-icon.svg dist/ && cp public/index.html dist/ && cp public/status.html dist/ 2>/dev/null || true",
+    "clean": "rimraf dist",
+    "preview": "python3 -m http.server 8080 --directory dist"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,18 @@
   ],
   "author": "Anuj Hydrabadi",
   "license": "MIT",
-  "devDependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "babel-loader": "^9.2.1",
+    "css-loader": "^6.8.1",
+    "html-loader": "^4.2.0",
+    "raw-loader": "^4.0.2",
+    "rimraf": "^5.0.5",
+    "style-loader": "^3.3.3",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  },
   "dependencies": {}
 }
