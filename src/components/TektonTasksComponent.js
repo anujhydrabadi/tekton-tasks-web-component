@@ -264,6 +264,127 @@ class TektonTasksComponent extends HTMLElement {
     return runs[0];
   }
 
+  renderTaskRuns() {
+    if (this.state.taskRuns.length === 0) {
+      return `
+        <div class="task-runs">
+          <h3>📊 Task Runs for: ${this.state.selectedTask}</h3>
+          <div class="empty-state">
+            <p>No task runs found for this task.</p>
+          </div>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="task-runs">
+        <h3>📊 Task Runs for: ${this.state.selectedTask}</h3>
+        <div class="task-runs-list">
+          ${this.state.taskRuns.map(run => this.renderTaskRunItem(run)).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  renderTaskRunItem(run) {
+    const statusColor = CONFIG.STATUS_COLORS[run.status] || CONFIG.STATUS_COLORS.PENDING;
+    const statusIcon = CONFIG.STATUS_ICONS[run.status] || '⚪';
+    
+    return `
+      <div class="task-run-item" data-run-name="${run.name}">
+        <div class="task-run-header">
+          <div class="task-run-name">${run.name}</div>
+          <div class="task-run-status" style="color: ${statusColor}">
+            ${statusIcon} ${run.status}
+          </div>
+        </div>
+        <div class="task-run-time">
+          Started: ${formatDateTime(run.startTime)}
+          ${run.completionTime ? `| Duration: ${formatDuration(run.startTime, run.completionTime)}` : ''}
+        </div>
+        ${run.steps && run.steps.length > 0 ? this.renderTaskRunSteps(run) : ''}
+      </div>
+    `;
+  }
+
+  renderTaskRunSteps(run) {
+    return `
+      <div class="task-run-steps">
+        <h4>Steps:</h4>
+        ${run.steps.map(step => `
+          <div class="step-item">
+            <span class="step-name">${step.name}</span>
+            <span class="step-status" style="color: ${CONFIG.STATUS_COLORS[step.status] || '#6b7280'}">
+              ${CONFIG.STATUS_ICONS[step.status] || '⚪'} ${step.status}
+            </span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  renderRunDetailsModal() {
+    const run = this.state.showRunDetails;
+    if (!run) return '';
+
+    return `
+      <div class="modal-overlay">
+        <div class="modal">
+          <div class="modal-header">
+            <h3 class="modal-title">📋 Run Details: ${run.name}</h3>
+            <button class="close-btn run-details-close">&times;</button>
+          </div>
+          
+          <div class="run-details-content">
+            <div class="detail-row">
+              <strong>Status:</strong> 
+              <span style="color: ${CONFIG.STATUS_COLORS[run.status]}">
+                ${CONFIG.STATUS_ICONS[run.status]} ${run.status}
+              </span>
+            </div>
+            <div class="detail-row">
+              <strong>Started:</strong> ${formatDateTime(run.startTime)}
+            </div>
+            ${run.completionTime ? `
+              <div class="detail-row">
+                <strong>Completed:</strong> ${formatDateTime(run.completionTime)}
+              </div>
+              <div class="detail-row">
+                <strong>Duration:</strong> ${formatDuration(run.startTime, run.completionTime)}
+              </div>
+            ` : ''}
+            
+            ${run.steps && run.steps.length > 0 ? `
+              <div class="steps-section">
+                <h4>Steps</h4>
+                ${run.steps.map(step => `
+                  <div class="step-detail">
+                    <div class="step-header">
+                      <span class="step-name">${step.name}</span>
+                      <span style="color: ${CONFIG.STATUS_COLORS[step.status]}">
+                        ${CONFIG.STATUS_ICONS[step.status]} ${step.status}
+                      </span>
+                    </div>
+                    ${step.container ? `
+                      <div class="step-container">
+                        Container: ${step.container}
+                      </div>
+                    ` : ''}
+                    <button class="btn btn-secondary view-logs-btn" 
+                            data-run-name="${run.name}" 
+                            data-step-name="${step.name}">
+                      📜 View Logs
+                    </button>
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
   renderTriggerModal() {
     const task = this.state.tasks.find(t => t.name === this.state.selectedTask);
     if (!task) return '';
@@ -413,6 +534,37 @@ class TektonTasksComponent extends HTMLElement {
     shadow.querySelectorAll('.close-btn, .cancel-trigger-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         this.setState({ showTriggerModal: false });
+      });
+    });
+
+    // Run details modal close button
+    shadow.querySelectorAll('.run-details-close').forEach(btn => {
+      btn.addEventListener('click', () => {
+        this.setState({ showRunDetails: null });
+      });
+    });
+
+    // Task run items - click to show details
+    shadow.querySelectorAll('.task-run-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        // Don't open details if clicking on a button
+        if (e.target.tagName === 'BUTTON') return;
+        
+        const runName = item.getAttribute('data-run-name');
+        const run = this.state.taskRuns.find(r => r.name === runName);
+        if (run) {
+          this.setState({ showRunDetails: run });
+        }
+      });
+    });
+
+    // View logs buttons
+    shadow.querySelectorAll('.view-logs-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation(); // Prevent opening the details modal
+        const runName = e.target.getAttribute('data-run-name');
+        const stepName = e.target.getAttribute('data-step-name');
+        await this.viewStepLogs(runName, stepName);
       });
     });
 
@@ -809,6 +961,176 @@ class TektonTasksComponent extends HTMLElement {
         border-top: 2px solid var(--border-light);
       }
 
+      /* Task Runs Section */
+      .task-runs {
+        margin-top: 32px;
+        padding: 24px;
+        background: var(--card-background);
+        border-radius: var(--border-radius-lg);
+        box-shadow: var(--shadow);
+      }
+
+      .task-runs h3 {
+        margin-bottom: 20px;
+        color: var(--text-primary);
+        font-size: 20px;
+      }
+
+      .task-runs-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .task-run-item {
+        background: var(--background-color);
+        border: 2px solid var(--border-light);
+        border-radius: var(--border-radius);
+        padding: 20px;
+        transition: var(--transition);
+        cursor: pointer;
+      }
+
+      .task-run-item:hover {
+        border-color: var(--primary-light);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+      }
+
+      .task-run-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+
+      .task-run-name {
+        font-weight: 600;
+        font-size: 14px;
+        color: var(--text-primary);
+      }
+
+      .task-run-status {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 16px;
+        background: var(--card-background);
+      }
+
+      .task-run-time {
+        font-size: 12px;
+        color: var(--text-secondary);
+        margin-bottom: 12px;
+      }
+
+      .task-run-steps {
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid var(--border-light);
+      }
+
+      .task-run-steps h4 {
+        font-size: 13px;
+        color: var(--text-secondary);
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .step-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 12px;
+        margin-bottom: 8px;
+        background: var(--card-background);
+        border-radius: var(--border-radius-sm);
+        border: 1px solid var(--border-light);
+      }
+
+      .step-name {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-primary);
+      }
+
+      .step-status {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+
+      /* Run Details Modal */
+      .run-details-content {
+        padding: 24px;
+      }
+
+      .detail-row {
+        margin-bottom: 16px;
+        font-size: 14px;
+        color: var(--text-primary);
+      }
+
+      .detail-row strong {
+        color: var(--text-secondary);
+        margin-right: 8px;
+      }
+
+      .steps-section {
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 2px solid var(--border-light);
+      }
+
+      .steps-section h4 {
+        margin-bottom: 16px;
+        color: var(--text-primary);
+        font-size: 16px;
+      }
+
+      .step-detail {
+        background: var(--background-color);
+        border: 1px solid var(--border-light);
+        border-radius: var(--border-radius-sm);
+        padding: 16px;
+        margin-bottom: 12px;
+      }
+
+      .step-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+
+      .step-container {
+        font-size: 12px;
+        color: var(--text-secondary);
+        margin-bottom: 12px;
+        font-family: monospace;
+      }
+
+      .view-logs-btn {
+        font-size: 12px;
+        padding: 6px 12px;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 40px;
+        color: var(--text-secondary);
+        background: var(--background-color);
+        border-radius: var(--border-radius);
+        border: 2px dashed var(--border-color);
+      }
+
       /* Responsive Design */
       @media (max-width: 768px) {
         .tasks-grid {
@@ -833,6 +1155,11 @@ class TektonTasksComponent extends HTMLElement {
         .modal {
           margin: 20px;
           max-width: calc(100vw - 40px);
+        }
+
+        .task-runs {
+          margin-top: 20px;
+          padding: 16px;
         }
       }
     `;
